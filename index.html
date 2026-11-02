@@ -1,0 +1,2443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CampusSwap – College Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon (optional: put favicon.ico in same folder) -->
+  <link rel="icon" href="favicon.ico" />
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 22px 70px rgba(15, 23, 42, 0.95);
+
+      /* Brand colors */
+      --red: #ef4444;
+      --orange: #f97316;
+      --yellow: #eab308;
+      --green: #22c55e;
+      --blue: #3b82f6;
+      --purple: #a855f7;
+    }
+
+    /* THEME: DARK ---------------------------------------------------------- */
+
+    body[data-theme="dark"] {
+      --bg: #020617;
+      --bg-soft: #020817;
+      --bg-elevated: #020617;
+      --card: #020617;
+      --border: #1e293b;
+
+      --primary: var(--orange);
+      --primary-strong: #ea580c;
+      --primary-soft: rgba(249, 115, 22, 0.14);
+      --accent: var(--blue);
+      --accent-soft: rgba(59, 130, 246, 0.14);
+
+      --danger: #ef4444;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+
+      background:
+        radial-gradient(circle at top left, rgba(248, 250, 252, 0.06), transparent 55%),
+        radial-gradient(circle at top right, rgba(251, 191, 36, 0.22), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.16), transparent 60%),
+        #020617;
+      color: var(--text);
+    }
+
+    /* THEME: LIGHT --------------------------------------------------------- */
+
+    body[data-theme="light"] {
+      --bg: #f9fafb;
+      --bg-soft: #f3f4f6;
+      --bg-elevated: #ffffff;
+      --card: #ffffff;
+      --border: #e5e7eb;
+
+      --primary: var(--orange);
+      --primary-strong: #ea580c;
+      --primary-soft: rgba(249, 115, 22, 0.14);
+      --accent: var(--blue);
+      --accent-soft: rgba(59, 130, 246, 0.18);
+
+      --danger: #dc2626;
+      --text: #020617;
+      --muted: #6b7280;
+
+      background:
+        radial-gradient(circle at top left, rgba(251, 191, 36, 0.15), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 60%),
+        #f9fafb;
+      color: var(--text);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+
+    /* HEADER + NAV --------------------------------------------------------- */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 26px;
+      padding: 10px 14px;
+      margin-left: -14px;
+      margin-right: -14px;
+      background: linear-gradient(
+        to bottom,
+        rgba(2, 6, 23, 0.98),
+        rgba(2, 6, 23, 0.9),
+        transparent
+      );
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(30, 64, 175, 0.6);
+    }
+
+    body[data-theme="light"] header {
+      background: linear-gradient(
+        to bottom,
+        rgba(249, 250, 251, 0.98),
+        rgba(249, 250, 251, 0.9),
+        transparent
+      );
+      border-bottom-color: #e5e7eb;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 20% 0%, var(--green), var(--blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: #ecfdf5;
+      box-shadow: 0 8px 25px rgba(22, 163, 74, 0.45);
+    }
+
+    body[data-theme="light"] .logo-icon {
+      box-shadow: 0 8px 25px rgba(22, 163, 74, 0.35);
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo-text span:first-child {
+      font-weight: 650;
+      letter-spacing: 0.06em;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .logo-text span:last-child {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    nav a {
+      position: relative;
+      padding-bottom: 2px;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 1.5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.16s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .nav-pill {
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease,
+        transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .nav-pill:hover {
+      background: var(--bg-elevated);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+    }
+
+    .theme-toggle {
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--muted);
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease, transform 0.1s ease;
+    }
+
+    .theme-toggle span.mode-label {
+      font-weight: 500;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-elevated);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 820px) {
+      nav a:not(:first-child):not(:last-child) {
+        display: none;
+      }
+    }
+
+    /* HERO -------------------------------------------------------- */
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
+      gap: 26px;
+      align-items: center;
+      margin-bottom: 34px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(8, 47, 73, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      font-size: 11px;
+      color: #e0f2fe;
+      margin-bottom: 10px;
+    }
+
+    body[data-theme="light"] .pill {
+      background: rgba(251, 191, 36, 0.15);
+      border-color: rgba(248, 181, 33, 0.8);
+      color: #854d0e;
+    }
+
+    .pill span.emoji {
+      font-size: 14px;
+    }
+
+    .hero-title {
+      font-size: clamp(30px, 5.1vw, 42px);
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+
+    .hero-highlight {
+      background: linear-gradient(
+        110deg,
+        var(--red),
+        var(--orange),
+        var(--yellow),
+        var(--green),
+        var(--blue)
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 470px;
+      margin-bottom: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      padding: 8px 16px;
+      font-size: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        background 0.1s ease, border-color 0.1s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(
+        120deg,
+        var(--red),
+        var(--orange),
+        var(--yellow)
+      );
+      color: #111827;
+      font-weight: 650;
+      border: none;
+      box-shadow: 0 18px 45px rgba(248, 113, 22, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 55px rgba(248, 113, 22, 0.75);
+      filter: brightness(1.03);
+    }
+
+    .btn-ghost {
+      background: var(--bg-soft);
+      border-color: var(--border);
+      color: var(--text);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.28);
+    }
+
+    .btn-ghost:hover {
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), var(--bg-soft));
+      border-color: var(--accent);
+    }
+
+    .hero-footnote {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .hero-footnote span {
+      color: var(--accent);
+    }
+
+    /* HERO MOCKUP ------------------------------------------------- */
+
+    .hero-mock {
+      position: relative;
+      border-radius: 26px;
+      padding: 16px;
+      background: radial-gradient(circle at top, #1d283a, var(--bg-soft));
+      border: 1px solid rgba(55, 65, 81, 0.8);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    body[data-theme="light"] .hero-mock {
+      background: radial-gradient(circle at top, #ffffff, #e5e7eb);
+      border-color: #d1d5db;
+      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.18);
+    }
+
+    .hero-mock::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: conic-gradient(
+        from 210deg,
+        rgba(56, 189, 248, 0.22),
+        rgba(129, 140, 248, 0.16),
+        rgba(234, 179, 8, 0.25),
+        transparent,
+        transparent
+      );
+      opacity: 0.7;
+      filter: blur(12px);
+      z-index: -1;
+    }
+
+    .mock-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .mock-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    body[data-theme="light"] .dot {
+      background: #d1d5db;
+    }
+
+    .mock-body {
+      display: grid;
+      grid-template-columns: 1.1fr 1.2fr;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    body[data-theme="light"] .mock-body {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 900px) {
+      .mock-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mock-col {
+      border-right: 1px solid rgba(31, 41, 55, 0.85);
+      padding-right: 10px;
+      font-size: 11px;
+    }
+
+    .mock-col:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    .mock-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--primary-soft);
+      color: #bbf7d0;
+      font-size: 10px;
+      margin-bottom: 8px;
+    }
+
+    .stat {
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    body[data-theme="light"] .stat-label {
+      color: #9ca3af;
+    }
+
+    .stat-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .item-card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 12px;
+      padding: 8px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    body[data-theme="light"] .item-card {
+      background: #020617;
+      border-color: rgba(30, 64, 175, 0.7);
+    }
+
+    .item-main {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .item-title {
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .item-meta {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+
+    .item-price {
+      font-size: 12px;
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+
+    .item-tag {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.22);
+      color: #eff6ff;
+    }
+
+    .item-right {
+      text-align: right;
+      font-size: 9px;
+      color: #9ca3af;
+    }
+
+    /* SECTIONS ----------------------------------------------------- */
+
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      margin-bottom: 12px;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 540px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border-radius: var(--radius-md);
+      padding: 11px 12px 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.35);
+    }
+
+    body[data-theme="light"] .feature-card {
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.12);
+    }
+
+    .feature-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-bottom: 8px;
+      background: radial-gradient(circle at 20% 0, var(--blue), var(--purple));
+      color: #eff6ff;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.55);
+    }
+
+    .feature-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature-body {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* HOW IT WORKS ------------------------------------------------- */
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .step {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 3px;
+      background: var(--bg-soft);
+    }
+
+    .step-body-title {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .step-body-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ROADMAP & PARTNERS ------------------------------------------- */
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .roadmap-card {
+      background: var(--card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 12px 13px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.35);
+      font-size: 12px;
+    }
+
+    .roadmap-card h3 {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .roadmap-card ul {
+      margin-left: 16px;
+      margin-top: 4px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .partner-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .partner-badge {
+      padding: 5px 9px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      font-size: 11px;
+      background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.2), var(--bg-soft));
+    }
+
+    /* APP / DEMO SECTION ------------------------------------------- */
+
+    .app-shell {
+      background: var(--bg-soft);
+      border-radius: 24px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      box-shadow: var(--shadow-soft);
+      margin-top: 6px;
+    }
+
+    body[data-theme="light"] .app-shell {
+      border-color: #d4d4ff;
+      box-shadow: 0 18px 55px rgba(15, 23, 42, 0.18);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 13px 13px 14px;
+      border: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 11px;
+      display: block;
+      margin-bottom: 3px;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #64748b;
+    }
+
+    body[data-theme="light"] input::placeholder,
+    body[data-theme="light"] textarea::placeholder {
+      color: #9ca3af;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      max-height: 130px;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .row > div {
+      flex: 1;
+    }
+
+    @media (max-width: 600px) {
+      .row {
+        flex-direction: column;
+      }
+    }
+
+    .helper-text {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: -3px;
+      margin-bottom: 5px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .filters input,
+    .filters select {
+      max-width: 170px;
+      font-size: 11px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(
+        120deg,
+        rgba(34, 197, 94, 0.14),
+        rgba(56, 189, 248, 0.18)
+      );
+      border: 1px solid rgba(56, 189, 248, 0.55);
+      font-size: 10px;
+      color: #dcfce7;
+      margin-top: 6px;
+    }
+
+    body[data-theme="light"] .badge-pill {
+      color: #064e3b;
+    }
+
+    .btn-secondary {
+      background: var(--bg-soft);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.2), var(--bg-soft));
+      border-color: var(--accent);
+    }
+
+    .btn-danger {
+      background: rgba(220, 38, 38, 0.16);
+      border-color: rgba(248, 113, 113, 0.7);
+      color: #fecaca;
+      font-size: 11px;
+      padding: 6px 10px;
+    }
+
+    body[data-theme="light"] .btn-danger {
+      color: #7f1d1d;
+    }
+
+    .btn-danger:hover {
+      background: rgba(220, 38, 38, 0.25);
+      border-color: rgba(248, 113, 113, 1);
+    }
+
+    .listings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .listings-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .listings-header span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .listings-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .listings-controls select {
+      max-width: 150px;
+      font-size: 11px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    .listings-loading {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .loading-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      animation: pulse 0.9s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        opacity: 0.3;
+        transform: scale(0.85);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    .listings {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 430px;
+      overflow-y: auto;
+      padding-right: 3px;
+    }
+
+    .listing-card {
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), var(--card));
+      border-radius: 14px;
+      padding: 9px 10px;
+      border: 1px solid rgba(51, 65, 85, 0.95);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
+    }
+
+    body[data-theme="light"] .listing-card {
+      background: #ffffff;
+      border-color: #d1d5db;
+      box-shadow: 0 10px 32px rgba(15, 23, 42, 0.15);
+    }
+
+    .listing-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .listing-image {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      border: 1px solid rgba(15, 23, 42, 0.4);
+    }
+
+    .listing-title {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .listing-meta {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .edu-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      font-size: 9px;
+      color: #bbf7d0;
+      background: rgba(13, 148, 136, 0.12);
+      margin-left: 6px;
+    }
+
+    .listing-description {
+      font-size: 11px;
+      color: #cbd5f5;
+    }
+
+    body[data-theme="light"] .listing-description {
+      color: #111827;
+    }
+
+    .listing-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-top: 4px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .price-tag {
+      font-weight: 600;
+      color: #bbf7d0;
+    }
+
+    body[data-theme="light"] .price-tag {
+      color: #15803d;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.25),
+        rgba(168, 85, 247, 0.3)
+      );
+      color: #eff6ff;
+      font-size: 9px;
+    }
+
+    .contact-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .report-link {
+      font-size: 10px;
+      color: #fca5a5;
+      cursor: pointer;
+    }
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 6px;
+      min-width: 100px;
+    }
+
+    .time-ago {
+      font-size: 9px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .pickup-pill {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(252, 211, 77, 0.16);
+      border: 1px solid rgba(234, 179, 8, 0.7);
+      color: #fef9c3;
+    }
+
+    body[data-theme="light"] .pickup-pill {
+      color: #854d0e;
+      background: rgba(252, 211, 77, 0.18);
+    }
+
+    .empty-state {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 24px 8px;
+      text-align: center;
+    }
+
+    .empty-state strong {
+      color: var(--accent);
+    }
+
+    .empty-emoji {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .pagination button {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* MODAL -------------------------------------------------------- */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 24px 80px rgba(15, 23, 42, 0.9);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-header h3 {
+      font-size: 14px;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-body p {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .modal-body textarea {
+      margin-top: 6px;
+      font-size: 12px;
+      min-height: 70px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .modal-actions button,
+    .modal-actions a {
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .modal-actions a {
+      border-color: var(--accent);
+    }
+
+    /* FOOTER ------------------------------------------------------- */
+
+    footer {
+      margin-top: 26px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(30, 64, 175, 0.6);
+      font-size: 10px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    body[data-theme="light"] footer {
+      border-top-color: #e0e7ff;
+    }
+
+    footer a {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="page">
+    <!-- HEADER -->
+    <header>
+      <div class="logo-wrap">
+        <div class="logo-icon">C</div>
+        <div class="logo-text">
+          <span>CAMPUSSWAP</span>
+          <span>College-only marketplace</span>
+        </div>
+      </div>
+      <nav>
+        <a href="#hero">Home</a>
+        <a href="#features">Why CampusSwap</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#app">Live demo</a>
+        <button class="nav-pill" type="button" onclick="scrollToApp()">Open Marketplace</button>
+        <button id="themeToggle" class="theme-toggle" type="button">
+          <span id="themeIcon">🌙</span>
+          <span class="mode-label" id="themeLabel">Dark</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div>
+        <div class="pill">
+          <span class="emoji">🎓</span>
+          <span>Built for students. Not scammers.</span>
+        </div>
+        <h1 class="hero-title">
+          Buy & sell on campus.<br />
+          <span class="hero-highlight">Keep it student-only.</span>
+        </h1>
+        <p class="hero-subtitle">
+          CampusSwap is a college-only marketplace where students trade textbooks,
+          dorm furniture, electronics, and more — verified by school email and
+          designed around your campus community.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" type="button" onclick="scrollToApp()">
+            Try the live demo
+          </button>
+          <a href="#how-it-works" class="btn btn-ghost">
+            See how it works
+          </a>
+        </div>
+
+        <p class="hero-footnote">
+          Prototype built as a <span>CS2 GenAI project</span> · future-ready for
+          full web & mobile app.
+        </p>
+      </div>
+
+      <!-- HERO MOCKUP (visual only) -->
+      <div class="hero-mock" aria-hidden="true">
+        <div class="mock-top">
+          <div class="mock-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <span>campusswap.app · Marketplace</span>
+        </div>
+
+        <div class="mock-body">
+          <div class="mock-col">
+            <div class="mock-badge">Your campus · Live listings</div>
+            <div class="stat">
+              <div class="stat-label">Active listings</div>
+              <div class="stat-value">132</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Verified students</div>
+              <div class="stat-value">1,247</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Avg. response time</div>
+              <div class="stat-value">11 min</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="item-card">
+              <div class="item-main">
+                <div class="item-title">CS 2 Data Structures Textbook</div>
+                <div class="item-meta">Textbooks · Seller: Alex</div>
+              </div>
+              <div class="item-right">
+                <div class="item-price">$35.00</div>
+                <div class="item-tag">Pickup: Library</div>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="item-main">
+                <div class="item-title">Mini Fridge for Dorm</div>
+                <div class="item-meta">Furniture · Seller: Jordan</div>
+              </div>
+              <div class="item-right">
+                <div class="item-price">$70.00</div>
+                <div class="item-tag">South Hall</div>
+              </div>
+            </div>
+            <div class="item-card">
+              <div class="item-main">
+                <div class="item-title">Wireless Study Headphones</div>
+                <div class="item-meta">Electronics · Seller: Taylor</div>
+              </div>
+              <div class="item-right">
+                <div class="item-price">$55.00</div>
+                <div class="item-tag">Library steps</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="section">
+      <div class="section-header">
+        <div class="section-kicker">Why CampusSwap?</div>
+        <h2 class="section-title">Safer, closer, and built just for campus life.</h2>
+        <p class="section-subtitle">
+          Unlike generic marketplaces, CampusSwap focuses on verified students,
+          real campus locations, and the types of items students actually trade.
+        </p>
+      </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <div class="feature-icon">✅</div>
+          <h3 class="feature-title">Student-only environment</h3>
+          <p class="feature-body">
+            Restrict access to users with a valid campus email to keep the
+            marketplace focused and reduce scam risk.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3 class="feature-title">Made for student items</h3>
+          <p class="feature-body">
+            Textbooks, lab calculators, mini fridges, dorm furniture, lab coats,
+            club merch — everything campus-related in one place.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">📍</div>
+          <h3 class="feature-title">Local meet-up spots</h3>
+          <p class="feature-body">
+            Meet on campus at the library, student center, or residence hall
+            lobbies for convenient and safe item exchanges.
+          </p>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3 class="feature-title">Designed with GenAI</h3>
+          <p class="feature-body">
+            This prototype was architected and implemented with the help of
+            GenAI tools, then refined and tested by a CS2 student.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section">
+      <div class="section-header">
+        <div class="section-kicker">How it works</div>
+        <h2 class="section-title">From idea to working prototype in one week.</h2>
+        <p class="section-subtitle">
+          For this CS2 project, CampusSwap was implemented as a front-end web app
+          with in-browser storage. The same flow could later plug into a full
+          backend and mobile app.
+        </p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-body-title">Define the core user actions</div>
+            <div class="step-body-text">
+              List the must-have features: create a listing, browse items,
+              search/filter, and keep everything lightweight and private.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-body-title">Design a clean UI experience</div>
+            <div class="step-body-text">
+              Use a modern layout, card-based listings, and distinct sections for
+              features, story, and the live app, similar to real startup sites.
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-body-title">Implement the live marketplace</div>
+            <div class="step-body-text">
+              Use HTML, CSS, and vanilla JavaScript to manage listings and persist
+              data using localStorage inside the browser.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP / FUTURE -->
+    <section id="roadmap" class="section">
+      <div class="section-header">
+        <div class="section-kicker">Roadmap</div>
+        <h2 class="section-title">From prototype to real startup.</h2>
+        <p class="section-subtitle">
+          This CS2 project focuses on the front-end experience and GenAI-assisted
+          development, but it’s designed with a clear upgrade path to a full
+          production app.
+        </p>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <h3>Next technical steps</h3>
+          <ul>
+            <li><strong>User accounts</strong> with real student login (OAuth + .edu verification).</li>
+            <li><strong>Backend API</strong> to store listings in a database instead of localStorage.</li>
+            <li><strong>Real-time messaging</strong> between buyer and seller with read receipts.</li>
+            <li><strong>Rating & reputation</strong> system to track reliable buyers/sellers.</li>
+            <li><strong>Mobile app</strong> version (React Native / Flutter) using the same API.</li>
+          </ul>
+        </div>
+
+        <div class="roadmap-card">
+          <h3>What’s next for the product</h3>
+          <ul>
+            <li>Partner with campus bookstores and clubs for official “verified” drops.</li>
+            <li>Offer <strong>campus-safe meet-up spots</strong> and safety tips in-app.</li>
+            <li>Introduce AI to <strong>auto-write listings</strong> and detect scammy posts.</li>
+            <li>Allow campus orgs to run <strong>event ticket</strong> resales and merch swaps.</li>
+          </ul>
+
+          <h3 style="margin-top: 10px;">Potential partner campuses</h3>
+          <div class="partner-badges">
+            <div class="partner-badge">Camden County College</div>
+            <div class="partner-badge">Rowan University</div>
+            <div class="partner-badge">Rutgers – Camden</div>
+            <div class="partner-badge">Temple University</div>
+            <div class="partner-badge">Community Colleges Network</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP / DEMO SECTION -->
+    <section id="app" class="section">
+      <div class="section-header">
+        <div class="section-kicker">Live demo</div>
+        <h2 class="section-title">Try the CampusSwap marketplace prototype.</h2>
+        <p class="section-subtitle">
+          This interactive demo shows how students could post items and browse a
+          campus-only feed, all running directly in the browser.
+        </p>
+      </div>
+
+      <div class="app-shell">
+        <div class="app-grid">
+          <!-- LEFT: create listing + filters -->
+          <section class="panel">
+            <h3 class="panel-title">Create a new listing</h3>
+            <p class="panel-subtitle">
+              Add any item you want to sell on campus: textbooks, dorm furniture,
+              electronics, clothing, and more.
+            </p>
+
+            <form id="listing-form">
+              <div>
+                <label for="title">Item title *</label>
+                <input
+                  id="title"
+                  type="text"
+                  placeholder="e.g. CS 2 Data Structures Textbook"
+                  required
+                />
+              </div>
+
+              <div>
+                <label for="description">Description *</label>
+                <textarea
+                  id="description"
+                  placeholder="Condition, edition, pickup spot, etc."
+                  required
+                ></textarea>
+                <button
+                  id="ai-suggest"
+                  type="button"
+                  class="btn btn-secondary"
+                  style="margin-top: 4px; font-size: 11px; padding: 5px 10px;"
+                >
+                  ✨ Suggest with AI
+                </button>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="category">Category *</label>
+                  <select id="category" required>
+                    <option value="">Choose a category</option>
+                    <option value="Textbooks">Textbooks</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p class="helper-text">
+                    Category can auto-fill based on title using simple AI-style logic.
+                  </p>
+                </div>
+                <div>
+                  <label for="price">Price (USD) *</label>
+                  <input
+                    id="price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="25.00"
+                    required
+                  />
+                  <p class="helper-text">
+                    Price can auto-suggest based on category.
+                  </p>
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="seller">Your name *</label>
+                  <input
+                    id="seller"
+                    type="text"
+                    placeholder="e.g. Momin"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="contact">Contact (.edu email only) *</label>
+                  <input
+                    id="contact"
+                    type="email"
+                    placeholder="you@college.edu"
+                    pattern=".+@.+\.edu"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row">
+                <div>
+                  <label for="major">Your major (optional)</label>
+                  <input
+                    id="major"
+                    type="text"
+                    placeholder="e.g. Computer Science"
+                  />
+                </div>
+                <div>
+                  <label for="year">Class year (optional)</label>
+                  <input
+                    id="year"
+                    type="text"
+                    placeholder="e.g. Sophomore"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="pickup">Pickup location</label>
+                <select id="pickup">
+                  <option value="Library entrance">Library entrance</option>
+                  <option value="Student Center lobby">Student Center lobby</option>
+                  <option value="Parking Lot B">Parking Lot B</option>
+                  <option value="South Residence Hall lobby">South Residence Hall lobby</option>
+                  <option value="Main campus cafeteria">Main campus cafeteria</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="image">Item image (optional)</label>
+                <input id="image" type="file" accept="image/*" />
+                <p class="helper-text">
+                  Images are stored locally in your browser as part of this demo.
+                </p>
+              </div>
+
+              <p class="helper-text">
+                This is a front-end demo only. Data stays in your browser and is
+                not sent to any server.
+              </p>
+
+              <button type="submit" class="btn btn-primary">
+                + Add listing
+              </button>
+            </form>
+
+            <div>
+              <h4
+                class="panel-title"
+                style="font-size: 14px; margin-bottom: 5px; margin-top: 6px"
+              >
+                Search & filters
+              </h4>
+              <p class="panel-subtitle" style="margin-bottom: 8px">
+                Narrow down what you see in the marketplace without deleting data.
+              </p>
+              <div class="filters">
+                <div>
+                  <label for="search">Keyword</label>
+                  <input
+                    id="search"
+                    type="text"
+                    placeholder="Search by title or description…"
+                  />
+                </div>
+                <div>
+                  <label for="filter-category">Category</label>
+                  <select id="filter-category">
+                    <option value="All">All categories</option>
+                    <option value="Textbooks">Textbooks</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <button id="clear-filters" class="btn btn-secondary" type="button">
+                  Clear filters
+                </button>
+              </div>
+
+              <div class="badge-pill">
+                🔒 Local demo · Listings are saved to this browser using
+                localStorage.
+              </div>
+
+              <div style="margin-top: 8px">
+                <button id="reset-data" class="btn btn-danger" type="button">
+                  Reset demo data
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- RIGHT: listings -->
+          <section class="panel">
+            <div class="listings-header">
+              <div>
+                <h3>Marketplace listings</h3>
+                <span id="listings-count">0 items</span>
+              </div>
+            </div>
+
+            <div class="listings-controls">
+              <div>
+                <span>Sort by: </span>
+                <select id="sort-by">
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="price-asc">Price: low to high</option>
+                  <option value="price-desc">Price: high to low</option>
+                </select>
+              </div>
+              <div id="listings-loading" class="listings-loading">
+                <div class="loading-dot"></div>
+                <span>Loading marketplace…</span>
+              </div>
+            </div>
+
+            <div id="listings" class="listings">
+              <!-- Cards injected by JavaScript -->
+            </div>
+
+            <div class="pagination">
+              <button id="prev-page" type="button">&larr; Previous</button>
+              <span id="page-info">Page 1 of 1</span>
+              <button id="next-page" type="button">Next &rarr;</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>CampusSwap · College Marketplace Prototype</span>
+      <span>
+        Built as a CS2 GenAI project using HTML, CSS, JavaScript & localStorage. |
+        <a href="#privacy">Privacy</a> · <a href="#terms">Terms</a>
+      </span>
+    </footer>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div id="contact-modal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Contact seller</h3>
+        <button id="close-modal" class="modal-close" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Seller:</strong> <span id="modal-seller"></span></p>
+        <p><strong>Email:</strong> <span id="modal-email"></span></p>
+        <p id="modal-profile"></p>
+        <textarea
+          id="modal-message"
+          placeholder="Write a short message you’d send to this seller…"
+        ></textarea>
+        <div class="modal-actions">
+          <button id="copy-email" type="button">Copy email</button>
+          <a id="email-link" href="#" target="_blank">Open in email app</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // helper to scroll to app section
+    function scrollToApp() {
+      const appSection = document.getElementById("app");
+      if (appSection) {
+        appSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    // THEME TOGGLING --------------------------------------------------------
+    const themeToggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const themeLabel = document.getElementById("themeLabel");
+
+    function applyTheme(theme) {
+      document.body.dataset.theme = theme;
+      localStorage.setItem("campusSwapTheme", theme);
+      if (theme === "light") {
+        themeIcon.textContent = "☀️";
+        themeLabel.textContent = "Light";
+      } else {
+        themeIcon.textContent = "🌙";
+        themeLabel.textContent = "Dark";
+      }
+    }
+
+    (function initTheme() {
+      const stored = localStorage.getItem("campusSwapTheme");
+      if (stored === "light" || stored === "dark") {
+        applyTheme(stored);
+      } else {
+        applyTheme("dark");
+      }
+    })();
+
+    themeToggleBtn.addEventListener("click", () => {
+      const current = document.body.dataset.theme === "light" ? "light" : "dark";
+      const next = current === "light" ? "dark" : "light";
+      applyTheme(next);
+    });
+
+    // ------- Data & storage (Marketplace) ---------------------------------
+    const STORAGE_KEY = "campusSwapListings";
+    let listings = [];
+
+    const sampleListings = [
+      {
+        id: 1,
+        title: "CS 2 Data Structures Textbook",
+        description:
+          "Good condition, used this semester. Some helpful highlights. Pickup outside campus library.",
+        category: "Textbooks",
+        price: 35.0,
+        seller: "Alex",
+        contact: "alex@college.edu",
+        major: "Computer Science",
+        year: "Sophomore",
+        pickup: "Library entrance",
+        image: null,
+        createdAt: Date.now() - 1000 * 60 * 60 * 3,
+      },
+      {
+        id: 2,
+        title: "Mini Fridge for Dorm",
+        description:
+          "Perfect for dorm life. Clean and cold. Pickup in South Residence Hall lobby.",
+        category: "Furniture",
+        price: 70.0,
+        seller: "Jordan",
+        contact: "jordan@college.edu",
+        major: "Business Admin",
+        year: "Junior",
+        pickup: "South Residence Hall lobby",
+        image: null,
+        createdAt: Date.now() - 1000 * 60 * 60 * 26,
+      },
+      {
+        id: 3,
+        title: "Wireless Noise-Cancelling Headphones",
+        description:
+          "Great for blocking out noise in the library. Battery still lasts all day.",
+        category: "Electronics",
+        price: 55.0,
+        seller: "Taylor",
+        contact: "taylor@college.edu",
+        major: "Psychology",
+        year: "Freshman",
+        pickup: "Library entrance",
+        image: null,
+        createdAt: Date.now() - 1000 * 60 * 17,
+      },
+    ];
+
+    function loadListings() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          listings = JSON.parse(stored);
+        } else {
+          listings = sampleListings.slice();
+          saveListings();
+        }
+      } catch (e) {
+        console.error("Failed to load listings:", e);
+        listings = sampleListings.slice();
+      }
+    }
+
+    function saveListings() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(listings));
+      } catch (e) {
+        console.error("Failed to save listings:", e);
+      }
+    }
+
+    function resetData() {
+      listings = sampleListings.slice();
+      saveListings();
+      applyFiltersAndRender();
+    }
+
+    // ------- Helpers -------------------------------------------------------
+    function formatPrice(value) {
+      const num = Number(value);
+      if (isNaN(num)) return "$0.00";
+      return "$" + num.toFixed(2);
+    }
+
+    function timeAgo(timestamp) {
+      const now = Date.now();
+      const diffMs = now - timestamp;
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr = Math.floor(diffMin / 60);
+      const diffDay = Math.floor(diffHr / 24);
+
+      if (diffMin < 1) return "Just now";
+      if (diffMin < 60) return diffMin + " min ago";
+      if (diffHr < 24) return diffHr + " hr ago";
+      if (diffDay === 1) return "1 day ago";
+      return diffDay + " days ago";
+    }
+
+    function isEduEmail(email) {
+      return /\.edu$/i.test(email.trim());
+    }
+
+    function generateAiDescription(title, category) {
+      const base = title || "this item";
+      const cat = category || "Other";
+      const templates = [
+        `Lightly used ${base} perfect for students taking classes this semester. Easy pickup on campus and priced fairly for a quick swap.`,
+        `Selling my ${base} from last semester. Still in great condition and ready to help someone else on campus save money.`,
+        `Campus-friendly ${base} in good condition. Ideal if you're looking to avoid paying full price at the bookstore or retail.`,
+        `Used ${base} that I no longer need. Great option for another student who wants something reliable at a student budget.`,
+      ];
+      const catLine = {
+        Textbooks: "Includes helpful notes and highlights from recent classes.",
+        Electronics: "Works well and has been tested recently before posting.",
+        Furniture: "Fits well in dorm rooms or small apartments near campus.",
+        Clothing: "Comfortable and student-style friendly for everyday wear.",
+        Other: "Useful around campus and easy to pick up between classes.",
+      }[cat] || "Easy to pick up on campus and priced for students.";
+      const choice = templates[Math.floor(Math.random() * templates.length)];
+      return `${choice} ${catLine}`;
+    }
+
+    function estimateCondition(description) {
+      if (!description) return "Good";
+      const text = description.toLowerCase();
+      if (text.includes("brand new") || text.includes("never used")) {
+        return "Like new";
+      }
+      if (text.includes("great condition") || text.includes("good condition") || text.includes("barely used")) {
+        return "Good";
+      }
+      if (text.includes("used") || text.includes("some wear") || text.includes("a few scratches")) {
+        return "Used";
+      }
+      if (text.includes("broken") || text.includes("doesn't work") || text.includes("for parts")) {
+        return "Needs repair";
+      }
+      return "Good";
+    }
+
+    function autoCategoryFromTitle(title) {
+      const t = title.toLowerCase();
+      if (t.includes("textbook") || t.includes("calc 2") || t.includes("physics") || t.includes("cs")) {
+        return "Textbooks";
+      }
+      if (t.includes("laptop") || t.includes("ipad") || t.includes("headphones") || t.includes("monitor")) {
+        return "Electronics";
+      }
+      if (t.includes("desk") || t.includes("chair") || t.includes("fridge") || t.includes("dresser")) {
+        return "Furniture";
+      }
+      if (t.includes("hoodie") || t.includes("jacket") || t.includes("shirt") || t.includes("sweatpants")) {
+        return "Clothing";
+      }
+      return null;
+    }
+
+    function suggestPriceForCategory(category) {
+      switch (category) {
+        case "Textbooks":
+          return 45;
+        case "Electronics":
+          return 60;
+        case "Furniture":
+          return 75;
+        case "Clothing":
+          return 20;
+        case "Other":
+          return 15;
+        default:
+          return "";
+      }
+    }
+
+    // ------- Rendering & state ---------------------------------------------
+    const listingsContainer = document.getElementById("listings");
+    const listingsCount = document.getElementById("listings-count");
+    const sortSelect = document.getElementById("sort-by");
+    const loadingEl = document.getElementById("listings-loading");
+    const pageInfoEl = document.getElementById("page-info");
+    const prevPageBtn = document.getElementById("prev-page");
+    const nextPageBtn = document.getElementById("next-page");
+
+    let filteredView = [];
+    let currentPage = 1;
+    const PAGE_SIZE = 6;
+
+    function showLoading(flag) {
+      if (!loadingEl) return;
+      loadingEl.style.display = flag ? "flex" : "none";
+    }
+
+    function renderListings(list, totalCount, page, totalPages) {
+      listingsContainer.innerHTML = "";
+
+      const totalItems = typeof totalCount === "number" ? totalCount : list.length;
+      const label = totalItems === 1 ? "1 item" : totalItems + " items";
+      listingsCount.textContent = label + (totalPages > 1 ? ` · Page ${page} of ${totalPages}` : "");
+
+      if (pageInfoEl) {
+        pageInfoEl.textContent = totalPages > 0 ? `Page ${page} of ${totalPages}` : "Page 1 of 1";
+      }
+
+      prevPageBtn.disabled = page <= 1;
+      nextPageBtn.disabled = page >= totalPages;
+
+      if (list.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML =
+          '<span class="empty-emoji">🪫</span>No listings found. <strong>Post the first item</strong> or clear your filters.';
+        listingsContainer.appendChild(empty);
+        return;
+      }
+
+      list.forEach((item) => {
+        const card = document.createElement("article");
+        card.className = "listing-card";
+
+        const main = document.createElement("div");
+        main.className = "listing-main";
+
+        if (item.image) {
+          const img = document.createElement("img");
+          img.className = "listing-image";
+          img.src = item.image;
+          img.alt = item.title || "Listing image";
+          main.appendChild(img);
+        }
+
+        const title = document.createElement("div");
+        title.className = "listing-title";
+        title.textContent = item.title;
+        main.appendChild(title);
+
+        const meta = document.createElement("div");
+        meta.className = "listing-meta";
+        meta.textContent = `${item.category} • Seller: ${item.seller}`;
+        if (isEduEmail(item.contact || "")) {
+          const badge = document.createElement("span");
+          badge.className = "edu-badge";
+          badge.innerHTML = "✓ .edu verified";
+          meta.appendChild(badge);
+        }
+        main.appendChild(meta);
+
+        if (item.major || item.year) {
+          const profileLine = document.createElement("div");
+          profileLine.className = "listing-meta";
+          profileLine.textContent = (item.major || "") + (item.major && item.year ? " · " : "") + (item.year || "");
+          main.appendChild(profileLine);
+        }
+
+        const desc = document.createElement("div");
+        desc.className = "listing-description";
+        desc.textContent = item.description;
+        main.appendChild(desc);
+
+        const cond = document.createElement("div");
+        cond.className = "listing-meta";
+        cond.textContent = "AI-estimated condition: " + estimateCondition(item.description);
+        main.appendChild(cond);
+
+        const footer = document.createElement("div");
+        footer.className = "listing-footer";
+
+        const priceSpan = document.createElement("span");
+        priceSpan.className = "price-tag";
+        priceSpan.textContent = formatPrice(item.price);
+        footer.appendChild(priceSpan);
+
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = item.category;
+        footer.appendChild(chip);
+
+        if (item.pickup) {
+          const pickupSpan = document.createElement("span");
+          pickupSpan.className = "pickup-pill";
+          pickupSpan.textContent = "Pickup: " + item.pickup;
+          footer.appendChild(pickupSpan);
+        }
+
+        const contact = document.createElement("span");
+        contact.className = "contact-link";
+        contact.textContent = "Contact seller";
+        contact.dataset.email = item.contact;
+        contact.dataset.seller = item.seller;
+        contact.dataset.major = item.major || "";
+        contact.dataset.year = item.year || "";
+        footer.appendChild(contact);
+
+        const report = document.createElement("span");
+        report.className = "report-link";
+        report.textContent = "Report";
+        report.dataset.id = item.id;
+        footer.appendChild(report);
+
+        main.appendChild(footer);
+
+        const side = document.createElement("div");
+        side.className = "side";
+
+        const time = document.createElement("div");
+        time.className = "time-ago";
+        time.textContent = timeAgo(item.createdAt || Date.now());
+        side.appendChild(time);
+
+        card.appendChild(main);
+        card.appendChild(side);
+
+        listingsContainer.appendChild(card);
+      });
+    }
+
+    function sortListings(list) {
+      const mode = sortSelect.value;
+      const sorted = list.slice();
+      if (mode === "newest") {
+        sorted.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      } else if (mode === "oldest") {
+        sorted.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+      } else if (mode === "price-asc") {
+        sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+      } else if (mode === "price-desc") {
+        sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+      }
+      return sorted;
+    }
+
+    function renderCurrentPage() {
+      const totalCount = filteredView.length;
+      const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const pageItems = filteredView.slice(start, start + PAGE_SIZE);
+      renderListings(pageItems, totalCount, currentPage, totalPages);
+    }
+
+    // ------- Filters -------------------------------------------------------
+    const searchInput = document.getElementById("search");
+    const filterCategory = document.getElementById("filter-category");
+    const clearFiltersBtn = document.getElementById("clear-filters");
+    const resetDataBtn = document.getElementById("reset-data");
+
+    function applyFiltersAndRender() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const category = filterCategory.value;
+
+      let temp = listings.slice();
+
+      if (keyword) {
+        temp = temp.filter((item) => {
+          const text =
+            (item.title || "") +
+            " " +
+            (item.description || "") +
+            " " +
+            (item.category || "");
+          return text.toLowerCase().includes(keyword);
+        });
+      }
+
+      if (category && category !== "All") {
+        temp = temp.filter((item) => item.category === category);
+      }
+
+      temp = sortListings(temp);
+
+      filteredView = temp;
+      currentPage = 1;
+      renderCurrentPage();
+    }
+
+    searchInput.addEventListener("input", applyFiltersAndRender);
+    filterCategory.addEventListener("change", applyFiltersAndRender);
+    sortSelect.addEventListener("change", () => {
+      filteredView = sortListings(filteredView);
+      currentPage = 1;
+      renderCurrentPage();
+    });
+
+    clearFiltersBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      filterCategory.value = "All";
+      sortSelect.value = "newest";
+      applyFiltersAndRender();
+    });
+
+    resetDataBtn.addEventListener("click", () => {
+      if (
+        confirm(
+          "This will reset the demo listings back to the original sample data. Continue?"
+        )
+      ) {
+        resetData();
+      }
+    });
+
+    prevPageBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCurrentPage();
+      }
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+      const totalPages = Math.max(1, Math.ceil(filteredView.length / PAGE_SIZE));
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderCurrentPage();
+      }
+    });
+
+    // ------- Contact modal -----------------------------------------------
+    const contactModal = document.getElementById("contact-modal");
+    const closeModalBtn = document.getElementById("close-modal");
+    const modalSeller = document.getElementById("modal-seller");
+    const modalEmail = document.getElementById("modal-email");
+    const modalProfile = document.getElementById("modal-profile");
+    const modalMessage = document.getElementById("modal-message");
+    const copyEmailBtn = document.getElementById("copy-email");
+    const emailLink = document.getElementById("email-link");
+
+    function openContactModal(info) {
+      modalSeller.textContent = info.seller || "";
+      modalEmail.textContent = info.email || "";
+      modalMessage.value = `Hi ${info.seller || "there"}, I'm interested in your "${info.title ||
+        "item"}" on CampusSwap. Is it still available?`;
+      const profileBits = [];
+      if (info.major) profileBits.push(info.major);
+      if (info.year) profileBits.push(info.year);
+      modalProfile.textContent = profileBits.length
+        ? "Student profile: " + profileBits.join(" · ")
+        : "";
+      emailLink.href = "mailto:" + (info.email || "");
+      contactModal.style.display = "flex";
+    }
+
+    function closeContactModal() {
+      contactModal.style.display = "none";
+    }
+
+    closeModalBtn.addEventListener("click", closeContactModal);
+    contactModal.addEventListener("click", (e) => {
+      if (e.target === contactModal) {
+        closeContactModal();
+      }
+    });
+
+    copyEmailBtn.addEventListener("click", () => {
+      const email = modalEmail.textContent.trim();
+      if (!email) return;
+      navigator.clipboard
+        .writeText(email)
+        .then(() => alert("Email copied to clipboard."))
+        .catch(() => alert("Email: " + email));
+    });
+
+    listingsContainer.addEventListener("click", (e) => {
+      const contactEl = e.target.closest(".contact-link");
+      if (contactEl) {
+        const card = contactEl.closest(".listing-card");
+        const titleEl = card.querySelector(".listing-title");
+        const info = {
+          email: contactEl.dataset.email || "",
+          seller: contactEl.dataset.seller || "",
+          major: contactEl.dataset.major || "",
+          year: contactEl.dataset.year || "",
+          title: titleEl ? titleEl.textContent : "",
+        };
+        openContactModal(info);
+        return;
+      }
+
+      const reportEl = e.target.closest(".report-link");
+      if (reportEl) {
+        const id = reportEl.dataset.id;
+        alert(
+          "Thanks for flagging this listing (ID: " +
+            id +
+            "). In a full version, this would notify moderators."
+        );
+      }
+    });
+
+    // ------- Form handling -----------------------------------------------
+    const form = document.getElementById("listing-form");
+    const titleInput = document.getElementById("title");
+    const descInput = document.getElementById("description");
+    const categoryInput = document.getElementById("category");
+    const priceInput = document.getElementById("price");
+    const sellerInput = document.getElementById("seller");
+    const contactInput = document.getElementById("contact");
+    const majorInput = document.getElementById("major");
+    const yearInput = document.getElementById("year");
+    const pickupInput = document.getElementById("pickup");
+    const imageInput = document.getElementById("image");
+    const aiSuggestBtn = document.getElementById("ai-suggest");
+
+    aiSuggestBtn.addEventListener("click", () => {
+      const title = titleInput.value.trim();
+      const category = categoryInput.value;
+      const suggestion = generateAiDescription(title, category);
+      descInput.value = suggestion;
+    });
+
+    // Auto-category + auto-price
+    titleInput.addEventListener("blur", () => {
+      const title = titleInput.value.trim();
+      if (!title) return;
+      if (!categoryInput.value) {
+        const cat = autoCategoryFromTitle(title);
+        if (cat) {
+          categoryInput.value = cat;
+          if (!priceInput.value) {
+            const suggested = suggestPriceForCategory(cat);
+            if (suggested) {
+              priceInput.value = suggested;
+            }
+          }
+        }
+      }
+    });
+
+    categoryInput.addEventListener("change", () => {
+      const cat = categoryInput.value;
+      if (cat && !priceInput.value) {
+        const suggested = suggestPriceForCategory(cat);
+        if (suggested) {
+          priceInput.value = suggested;
+        }
+      }
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const title = titleInput.value.trim();
+      const description = descInput.value.trim();
+      const category = categoryInput.value;
+      const price = parseFloat(priceInput.value);
+      const seller = sellerInput.value.trim();
+      const contact = contactInput.value.trim();
+      const major = majorInput.value.trim();
+      const year = yearInput.value.trim();
+      const pickup = pickupInput.value;
+
+      if (!title || !description || !category || isNaN(price) || !seller || !contact) {
+        alert("Please fill in all required fields with valid values.");
+        return;
+      }
+
+      if (!isEduEmail(contact)) {
+        alert("Contact email must be a valid .edu address (e.g. you@college.edu).");
+        return;
+      }
+
+      const file = imageInput.files[0];
+
+      const createAndSaveListing = (imageDataUrl) => {
+        const newListing = {
+          id: Date.now(),
+          title,
+          description,
+          category,
+          price,
+          seller,
+          contact,
+          major: major || "",
+          year: year || "",
+          pickup,
+          image: imageDataUrl || null,
+          createdAt: Date.now(),
+        };
+
+        listings.push(newListing);
+        saveListings();
+
+        form.reset();
+        // reset select defaults
+        categoryInput.value = "";
+        pickupInput.value = "Library entrance";
+        applyFiltersAndRender();
+        titleInput.focus();
+      };
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          createAndSaveListing(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        createAndSaveListing(null);
+      }
+    });
+
+    // ------- Initialize ---------------------------------------------------
+    showLoading(true);
+    loadListings();
+    filteredView = listings.slice();
+    filteredView = sortListings(filteredView);
+    currentPage = 1;
+    renderCurrentPage();
+    showLoading(false);
+  </script>
+</body>
+</html>
